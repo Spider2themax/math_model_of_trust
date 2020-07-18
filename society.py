@@ -11,3 +11,6 @@ class Society():
                  population_size=25,
                  connectivity_probability=0.1):
         pass
+
+    def generate_society_constituents(self, population_size):
+        pass
