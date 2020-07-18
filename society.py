@@ -1,4 +1,5 @@
 # Copyright MaxAndMitchCorp 2020
+from person import Person
 import random
 
 class Society():
