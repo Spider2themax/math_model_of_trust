@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Pytests
+
+on: [push]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Add in python3-setuptools for proper install
+    - name: Install python3-setuptools
+      run: sudo apt-get install -y python3-setuptools
+
+    # Install required packages
+    - name: Install dependences
+      run: pip3 install -r requirements.txt
+
+    # Runs a set of pytests
+    - name: Run tests
+      run: python3 -m pytest tests -s
+
