@@ -16,7 +16,7 @@ class Society():
     
     #Interpretation of the edge_matrix:
     #Entry in row i, column j, represents the presence of an edge from node
-    #i to node j. 
+    #i+1 to node j+1 (since indices start at 0). 
     def __init__(self,
                  population_size=25,
                  connectivity_probability=0.1):
@@ -26,6 +26,7 @@ class Society():
         self.edge_matrix=[[0 for x in range(self.population_size)]
                           for y in range(self.population_size)] 
         self.person_vector=[Person() for x in range(self.population_size)]
+        self.total_edges = 0
         
     #Note: Separating out the method from the constructor which instantiates
     #the vector of persons in the society may make more sense to group with
@@ -39,8 +40,18 @@ class Society():
     def generate_edge_matrix(self):
         for x in range(self.population_size):
             for y in range(self.population_size):
+                #Diagonal elements should all be 1, as each node is connected
+                #to itself.
                 connection = random.random()
-                if float(connection)<=self.connectivity_probability:
+                if x==y:
                     self.edge_matrix[x][y]=1
+                    self.total_edges += 1
+                else:
+                    if float(connection)<=self.connectivity_probability:
+                        self.edge_matrix[x][y]=1
+                        self.total_edges += 1
+                
+                    
+                
         
             
