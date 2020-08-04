@@ -41,6 +41,7 @@ def test_connectivity_matrix():
     # Create society object.
     society = Society(population_size=population_size,
                       connectivity_probability=connectivity_probability)
+    society.generate_edge_matrix()
     # Loop through each entry and assert either 0 or 1.
     for x in range(population_size):
         for y in range(population_size):
@@ -60,6 +61,8 @@ def test_connectivity_matrix():
                     connectivity_probability=connectivity_probability_first)
     society_second = Society(population_size=population_size,
                     connectivity_probability=connectivity_probability_second)
+    society_first.generate_edge_matrix()
+    society_second.generate_edge_matrix()
     # Sum edges, and assert that the first has more than the second.
     count_first = 0
     count_second = 0
