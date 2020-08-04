@@ -26,7 +26,6 @@ class Society():
         self.edge_matrix=[[0 for x in range(self.population_size)]
                           for y in range(self.population_size)] 
         self.person_vector=[Person() for x in range(self.population_size)]
-        self.total_edges = 0
         
     #Note: Separating out the method from the constructor which instantiates
     #the vector of persons in the society may make more sense to group with
@@ -45,11 +44,9 @@ class Society():
                 connection = random.random()
                 if x==y:
                     self.edge_matrix[x][y]=1
-                    self.total_edges += 1
                 else:
                     if float(connection)<=self.connectivity_probability:
                         self.edge_matrix[x][y]=1
-                        self.total_edges += 1
                 
                     
                 
