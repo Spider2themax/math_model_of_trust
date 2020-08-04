@@ -48,8 +48,8 @@ def test_connectivity_matrix():
     
     # Next, create two society classes, one with connectivity probability 0.99
     # and another with probability 0.01. Both will have larger population 
-    # sizes to avoid fluke statistical generation. Assert edges fields for 
-    # both objects.
+    # sizes to avoid fluke statistical generation. Assert sums of the two
+    # edge matrices.
     
     # Set up constants
     population_size = 1000
@@ -60,6 +60,14 @@ def test_connectivity_matrix():
                     connectivity_probability=connectivity_probability_first)
     society_second = Society(population_size=population_size,
                     connectivity_probability=connectivity_probability_second)
-    # Call total_edges, and assert that the first has more than the second.
-    assert (society_first.total_edges > society_second.total_edges)
+    # Sum edges, and assert that the first has more than the second.
+    count_first = 0
+    count_second = 0
+    for x in range(population_size):
+        for y in range(population_size):
+            if society_first.edge_matrix[x][y] == 1:
+                count_first += 1
+            if society_second.edge_matrix[x][y] == 1:
+                count_second += 1
+    assert (count_first > count_second)
     
