@@ -32,4 +32,34 @@ def test_connectivity_matrix():
            low connectivity_probability.
     """
     # TO DO FOR MITCHMAN
-    pass
+    # First, go through the matrix and test to make sure all edges are an 
+    # appropriate value.
+    
+    # Instantiate constants
+    population_size = 50
+    connectivity_probability = 0.15
+    # Create society object.
+    society = Society(population_size=population_size,
+                      connectivity_probability=connectivity_probability)
+    # Loop through each entry and assert either 0 or 1.
+    for x in range(population_size):
+        for y in range(population_size):
+            assert (society.edge_matrix[x][y]==0) or (society.edge_matrix[x][y]==1)
+    
+    # Next, create two society classes, one with connectivity probability 0.99
+    # and another with probability 0.01. Both will have larger population 
+    # sizes to avoid fluke statistical generation. Assert edges fields for 
+    # both objects.
+    
+    # Set up constants
+    population_size = 1000
+    connectivity_probability_first = 0.99
+    connectivity_probability_second = 0.01
+    # Create both society objects
+    society_first = Society(population_size=population_size,
+                    connectivity_probability=connectivity_probability_first)
+    society_second = Society(population_size=population_size,
+                    connectivity_probability=connectivity_probability_second)
+    # Call total_edges, and assert that the first has more than the second.
+    assert (society_first.total_edges > society_second.total_edges)
+    
