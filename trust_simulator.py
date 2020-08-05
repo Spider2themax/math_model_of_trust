@@ -31,6 +31,9 @@ class TrustSimulator:
                                                   trust_updates=trust_updates)
             # Save current overall societal trust.
             societal_trust.append(np.mean([society.person_vector[person_id].get_trust() for person_id in range(society.population_size)]))
+            
+            # Reset trust_updates each iteration
+            trust_updates = []
         return societal_trust
 
     def _calculate_trust_update(self, society, person_id, K=1, alpha=1):
