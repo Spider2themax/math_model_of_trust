@@ -25,7 +25,7 @@ class TrustSimulator:
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   person_id=person_id))
-            print(trust_updates)
+            #print(trust_updates)
             # Update societal trust.
             society = self._update_societal_trust(society=society,
                                                   trust_updates=trust_updates)
@@ -45,7 +45,7 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        return update - society.person_vector[person_id].get_trust()
+        return -update + society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
         for person_id in range(society.population_size):
