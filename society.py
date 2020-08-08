@@ -1,5 +1,6 @@
 # Copyright MaxAndMitchCorp 2020
 
+import matplotlib.pyplot as plt
 from person import Person
 import numpy as np
 import random
@@ -39,3 +40,17 @@ class Society:
                     if float(random.random()) <= self.connectivity_probability:
                         edge_matrix[x][y] = 1
         return edge_matrix
+
+    def plot_society_trust_histories(self):
+        for person in self.person_vector:
+            signal = np.array(person._trust_history)
+            pos_signal = signal.copy()
+            neg_signal = signal.copy()
+            
+            pos_signal[pos_signal <= 0] = np.nan
+            neg_signal[neg_signal > 0] = np.nan
+            
+            #plotting
+            plt.style.use('fivethirtyeight')
+            plt.plot(pos_signal, color='r')
+            plt.plot(neg_signal, color='b')

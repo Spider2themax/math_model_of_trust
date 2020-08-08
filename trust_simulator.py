@@ -10,7 +10,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, iterations):
+    def simulate_society(self, society, iterations, K=1, alpha=1):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -24,7 +24,9 @@ class TrustSimulator:
             trust_updates = []
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
-                                                                  person_id=person_id))
+                                                                  person_id=person_id,
+                                                                  K=K,
+                                                                  alpha=alpha))
             #print(trust_updates)
             # Update societal trust.
             society = self._update_societal_trust(society=society,
@@ -36,7 +38,7 @@ class TrustSimulator:
             trust_updates = []
         return societal_trust
 
-    def _calculate_trust_update(self, society, person_id, K=1, alpha=1):
+    def _calculate_trust_update(self, society, person_id, K, alpha):
         """
         This function calculates updates for a particular person in the society.
         """
@@ -45,7 +47,7 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        return -update + society.person_vector[person_id].get_trust()
+        return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
         for person_id in range(society.population_size):
