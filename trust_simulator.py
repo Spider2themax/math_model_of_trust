@@ -11,7 +11,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, iterations, affiliation_prob = 0.5):
+    def simulate_society(self, society, iterations, K=1, alpha=1, affiliation_prob = 0.5):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -25,7 +25,9 @@ class TrustSimulator:
             trust_updates = []
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
-                                                                  person_id=person_id))
+                                                                  person_id=person_id,
+                                                                  K=K,
+                                                                  alpha=alpha))
             #print(trust_updates)
             # Update societal trust.
             society = self._update_societal_trust(society=society,
@@ -48,7 +50,7 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        return -update + society.person_vector[person_id].get_trust()
+        return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
         for person_id in range(society.population_size):
@@ -66,7 +68,7 @@ class TrustSimulator:
                     society.edge_matrix[person_id_first][person_id_second] = 1
                 else:
                      # Compute party affiliation difference
-                    party_delta = society.person_vector[person_id_first]._party_affiliation - society.person_vector[person_id_second]._party_affiliation
+                    party_delta = np.tanh(society.person_vector[person_id_first]._party_affiliation) - np.tanh(society.person_vector[person_id_second]._party_affiliation)
                     party_delta = abs(party_delta)
                     
                     # Further apart affiliation, less likely to connect.
