@@ -1,6 +1,7 @@
 # Copyright MaxAndMitchCorp 2020
 
 import numpy as np
+import random
 
 
 class TrustSimulator:
@@ -10,7 +11,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, iterations):
+    def simulate_society(self, society, iterations, affiliation_prob = 0.5):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -34,6 +35,8 @@ class TrustSimulator:
             
             # Reset trust_updates each iteration
             trust_updates = []
+            # Update edge matrix
+            society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob)
         return societal_trust
 
     def _calculate_trust_update(self, society, person_id, K=1, alpha=1):
@@ -51,3 +54,31 @@ class TrustSimulator:
         for person_id in range(society.population_size):
             society.person_vector[person_id].update_trust(update=trust_updates[person_id])
         return society
+    
+    def _update_edge_matrix(self, society, affiliation_prob = 0.5):
+        # Loop through each entry in the edge matrix. On diagonal elements 
+        # always remain 1 since all nodes are connected with themselves. For
+        # all other connections, if the nodes are further in affiliation, have
+        # the edge update be more likely to not connect. 
+        for person_id_first in range(society.population_size):
+            for person_id_second in range(society.population_size):
+                if person_id_first == person_id_second:
+                    society.edge_matrix[person_id_first][person_id_second] = 1
+                else:
+                     # Compute party affiliation difference
+                    party_delta = society.person_vector[person_id_first]._party_affiliation - society.person_vector[person_id_second]._party_affiliation
+                    party_delta = abs(party_delta)
+                    
+                    # Further apart affiliation, less likely to connect.
+                    # party_delta maximum of 2, so divided by 2 and taking
+                    # the complement gives a reasonable discount.
+                    adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
+                    
+                    connect = random.random()
+                    
+                    if connect <= adjusted_connectivity_probability:
+                        society.edge_matrix[person_id_first][person_id_second] = 1
+                    else:
+                        society.edge_matrix[person_id_first][person_id_second] = 0
+        return society
+               
