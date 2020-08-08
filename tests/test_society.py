@@ -2,7 +2,6 @@
 
 from society import Society
 from person import Person
-import matplotlib.pyplot as plt
 
 
 def test_population():
