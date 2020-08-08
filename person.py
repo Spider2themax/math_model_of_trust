@@ -7,6 +7,7 @@ class Person:
     def __init__(self):
         # Initiate person model fields.
         self._trust = random.random() - random.random()
+        self._party_affiliation = random.random() - random.random()
 
     def get_trust(self):
         return self._trust
