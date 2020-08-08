@@ -57,7 +57,7 @@ class TrustSimulator:
             society.person_vector[person_id].update_trust(update=trust_updates[person_id])
         return society
     
-    def _update_edge_matrix(self, society, affiliation_prob = 0.5):
+    def _update_edge_matrix(self, society, affiliation_prob = 0.2):
         # Loop through each entry in the edge matrix. On diagonal elements 
         # always remain 1 since all nodes are connected with themselves. For
         # all other connections, if the nodes are further in affiliation, have
