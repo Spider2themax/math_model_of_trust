@@ -20,7 +20,7 @@ def test_edges_dynamic():
     # of edges decreases over the course of a simulation.
     
     # Instantiate the society
-    society = Society(population_size=1000, connectivity_probability=0.3)
+    society = Society(population_size=100, connectivity_probability=0.3)
     
     # Count the number of edges to start
     count1 = 0
