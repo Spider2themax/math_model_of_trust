@@ -12,4 +12,4 @@ def test_societal_convergence(alpha):
     societal_trust = trust_simulator.simulate_society(society=society,
                                                       iterations=10,
                                                       alpha=alpha)
-    assert sum(societal_trust) < 100
+    assert sum(societal_trust) < 1000
