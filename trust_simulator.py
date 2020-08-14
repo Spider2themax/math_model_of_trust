@@ -13,7 +13,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, iterations, K=1, alpha=1, affiliation_prob = 0.5):
+    def simulate_society(self, society, institution, iterations, K=1, alpha=1, affiliation_prob = 0.5):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -27,6 +27,7 @@ class TrustSimulator:
             trust_updates = []
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
+                                                                  institution=institution,
                                                                   person_id=person_id,
                                                                   K=K,
                                                                   alpha=alpha))
@@ -41,9 +42,11 @@ class TrustSimulator:
             trust_updates = []
             # Update edge matrix
             society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob)
+            # Update institution composition
+            institution._update_party_comp(society = society)
         return societal_trust
 
-    def _calculate_trust_update(self, society, person_id, K=1, alpha=1):
+    def _calculate_trust_update(self, society, institution, person_id, K=1, J=1, alpha=1):
         """
         This function calculates updates for a particular person in the society.
         """
@@ -52,6 +55,7 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
+        update = update + J * institution._generate_law
         return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
