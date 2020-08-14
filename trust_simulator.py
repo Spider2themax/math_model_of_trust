@@ -2,6 +2,8 @@
 
 import numpy as np
 import random
+from society import Society
+from person import Person
 
 
 class TrustSimulator:
