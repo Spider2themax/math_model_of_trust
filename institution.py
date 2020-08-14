@@ -12,7 +12,7 @@ from person import Person
 
 class Institution:
     
-    def _init_(self, society):
+    def __init__(self, society):
         self.party_compostion = 0
         self._calculate_society_comp(society)
         
