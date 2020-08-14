@@ -24,6 +24,7 @@ def test_edges_dynamic():
     
     # Instantiate the society
     society = Society(population_size=100, connectivity_probability=0.3)
+    institution = Institution(society = society)
     
     # Count the number of edges to start
     count1 = 0
@@ -37,9 +38,10 @@ def test_edges_dynamic():
     # of what it started with.
     trust_simulator = TrustSimulator()
     societal_trust = trust_simulator.simulate_society(society=society,
-                                     iterations = 30,
-                                     alpha = 0.1,
-                                     affiliation_prob = 0.15)
+                                                      institution = institution,
+                                                      iterations = 30,
+                                                      alpha = 0.1,
+                                                      affiliation_prob = 0.15)
     # Count the edges again with the simulated society.
     count2 = 0
     for person_id_first in range(society.population_size):
