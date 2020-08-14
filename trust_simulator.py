@@ -55,7 +55,7 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        update = update + J * institution._generate_law
+        update = update + J * institution._generate_law(mean = 0, stdev = 0.5)
         return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
