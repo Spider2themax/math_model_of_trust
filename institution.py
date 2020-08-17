@@ -16,6 +16,9 @@ class Institution:
         self.party_compostion = 0
         self._calculate_society_comp(society)
         
+    def get_affiliation(self):
+        return self.party_composition
+        
     def _calculate_society_comp(self, society):
         # Loop through the inputed society and calculate the average party
         # affiliation, setting party_compostion to this.
