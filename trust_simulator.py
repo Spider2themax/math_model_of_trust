@@ -107,7 +107,7 @@ class TrustSimulator:
             society.person_vector[person_id].update_party_affiliation(self._calculate_affiliation_update(person_id, K, society, alpha))
         return society
     
-    def _calculate_affiliation_update(person_id, K, society, alpha):
+    def _calculate_affiliation_update(self, person_id, K, society, alpha):
         # Calculate using tanh method based off of connections.
         update = 0
         for person_id_new in range(society.population_size):
