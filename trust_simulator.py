@@ -42,11 +42,13 @@ class TrustSimulator:
             trust_updates = []
             # Update edge matrix
             society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob)
+            # Update society's party affiliations
+            society = self._update_society_party(society = society)
             # Update institution composition
             institution._update_party_comp(society = society)
         return societal_trust
 
-    def _calculate_trust_update(self, society, institution, person_id, K=1, J=1, alpha=1):
+    def _calculate_trust_update(self, society, institution, person_id, K=1, J=1, alpha=1, mean = 0, stdev = 0.5):
         """
         This function calculates updates for a particular person in the society.
         """
@@ -55,7 +57,14 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        update = update + J * institution._generate_law(mean = 0, stdev = 0.5)
+        # Generate law the institution establishes.
+        law = institution._generate_law(mean,stdev)
+        # Include if the affiliation of the person_id is of the same sign as
+        # the institution.
+        if society.person_vector[person_id].get_affiliation() * institution.get_affiliation() >= 0:
+            update = update + J * law
+        else:
+            update = update
         return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
@@ -89,4 +98,21 @@ class TrustSimulator:
                     else:
                         society.edge_matrix[person_id_first][person_id_second] = 0
         return society
+    
+    def _update_society_party(self, society, K = 1, alpha = 1):
+        # Loop through the society, updating party affiliations by drifting
+        # towards connected nodes affiliation.
+        update = 0
+        for person_id in range(society.population_size):
+            society.person_vector[person_id]._update_party_affiliation(self._calculate_affiliation_update(person_id, K, society, alpha))
+        return society
+    
+    def _calculate_affiliation_update(person_id, K, society, alpha):
+        # Calculate using tanh method based off of connections.
+        update = 0
+        for person_id_new in range(society.population_size):
+            if person_id != person_id_new:
+                update = update + K * society.edge_matrix[person_id][person_id_new] * np.tanh(alpha * society.person_vector[person_id_new].get_affiliation())
+        return update - society.person_vector[person_id].get_affiliation()
+                
                
