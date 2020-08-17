@@ -104,7 +104,7 @@ class TrustSimulator:
         # towards connected nodes affiliation.
         update = 0
         for person_id in range(society.population_size):
-            society.person_vector[person_id]._update_party_affiliation(self._calculate_affiliation_update(person_id, K, society, alpha))
+            society.person_vector[person_id].update_party_affiliation(self._calculate_affiliation_update(person_id, K, society, alpha))
         return society
     
     def _calculate_affiliation_update(person_id, K, society, alpha):
