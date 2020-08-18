@@ -13,7 +13,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5):
+    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -25,12 +25,15 @@ class TrustSimulator:
         for iteration in range(iterations):
             # Determine an update in trust based on 
             trust_updates = []
+            law = institution.generate_law(mean = mean, stdev = stdev)
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   institution=institution,
                                                                   person_id=person_id,
                                                                   K=K,
-                                                                  alpha=alpha))
+                                                                  J=J,
+                                                                  alpha=alpha,
+                                                                  law = law))
             #print(trust_updates)
             # Update societal trust.
             society = self._update_societal_trust(society=society,
@@ -48,7 +51,7 @@ class TrustSimulator:
             institution._update_party_comp(society = society)
         return societal_trust
 
-    def _calculate_trust_update(self, society, institution, person_id, K=1, J=1, alpha=1, mean = 0, stdev = 0.5):
+    def _calculate_trust_update(self, society, institution, person_id, K=1, J=1, alpha=1, law = 0):
         """
         This function calculates updates for a particular person in the society.
         """
@@ -57,14 +60,12 @@ class TrustSimulator:
             if person_id != j:
                 # Using update equation for now from Baumann 2020.
                 update = update + K * society.edge_matrix[person_id][j] * np.tanh(alpha * society.person_vector[j].get_trust())
-        # Generate law the institution establishes.
-        law = institution._generate_law(mean,stdev)
-        # Include if the affiliation of the person_id is of the same sign as
-        # the institution.
+        # Have the law positively update those who share the affiliation of the 
+        # institution, and negatively affect the opposite.
         if society.person_vector[person_id].get_affiliation() * institution.get_affiliation() >= 0:
-            update = update + J * law
+            update = update + J * abs(law)
         else:
-            update = update
+            update = update - J * abs(law)
         return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
