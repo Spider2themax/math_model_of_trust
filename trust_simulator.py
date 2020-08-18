@@ -114,6 +114,4 @@ class TrustSimulator:
         for person_id_new in range(society.population_size):
             if person_id != person_id_new:
                 update = update + K * society.edge_matrix[person_id][person_id_new] * np.tanh(alpha * society.person_vector[person_id_new].get_affiliation())
-        return update - society.person_vector[person_id].get_affiliation()
-                
-               
+        return update - society.person_vector[person_id].get_affiliation()                             
