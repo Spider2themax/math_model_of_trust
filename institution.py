@@ -7,6 +7,7 @@
 
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 from society import Society
 from person import Person
 
@@ -15,6 +16,8 @@ class Institution:
     def __init__(self, society):
         self.party_compostion = 0
         self._calculate_society_comp(society)
+        self.affiliation_history = [self.party_composition]
+        self.law_history = []
         
     def get_affiliation(self):
         return self.party_composition
@@ -38,11 +41,22 @@ class Institution:
         # Default params: mean = 0, stdev = 0.5
         # Note: already returns the tanh value
         law = np.random.normal(loc = mean, scale = stdev)
+        self.law_history.append(law)
         return np.tanh(law)
         
     def _update_party_comp(self, society):
         # No dynamic aspect to affiliation yet in society, but once there is,
         # just _calculate_society_comp
         self._calculate_society_comp(society)
+        self.affiliation_history.append(self.party_composition)
+    
+    def plot_institution_affiliation_history(self):
+        # Similar to society class, plot the affiliation history for the 
+        # institution.
+        plt.plot(self.affiliation_history, color = 'r')
+        
+    def plot_institution_law_history(self):
+        # Plot the institution's history of law making
+        plt.plot(self.law_history, color = 'r')
 
 
