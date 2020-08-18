@@ -90,8 +90,7 @@ class TrustSimulator:
                     # Further apart affiliation, less likely to connect.
                     # party_delta maximum of 2, so divided by 2 and taking
                     # the complement gives a reasonable discount.
-                    # UPDATE: Try a square dropoff for connection
-                    adjusted_connectivity_probability = (1 - (party_delta)/2) * (1 - (party_delta)/2) * affiliation_prob
+                    adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
                     
                     connect = random.random()
                     
