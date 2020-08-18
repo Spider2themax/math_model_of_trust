@@ -25,7 +25,7 @@ class TrustSimulator:
         for iteration in range(iterations):
             # Determine an update in trust based on 
             trust_updates = []
-            law = institution.generate_law(mean = mean, stdev = stdev)
+            law = institution._generate_law(mean = mean, stdev = stdev)
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   institution=institution,
