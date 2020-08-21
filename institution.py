@@ -10,6 +10,7 @@ import random
 import matplotlib.pyplot as plt
 from society import Society
 from person import Person
+from law import Law
 
 class Institution:
     
@@ -49,14 +50,20 @@ class Institution:
         else:
             return total_affiliation/count
 
-    def _generate_law(self, mean = 0, stdev = 0.5):
-        # Generate a law to be transformed using tanh based on a normal distribution.
-        # Default params: mean = 0, stdev = 0.5
-        # Note: already returns the tanh value
-        law = np.random.normal(loc = mean, scale = stdev)
-        self.law_history.append(law)
-        return np.tanh(law)
-
+    def _generate_laws(self, mean = 0, stdev = 0.5, law_type = 0, number_of_laws = 1):
+        # Generate a law(s) to be transformed using tanh, returned as an array.
+        # Default params: mean = 0, stdev = 0.5, number_of_laws = 1
+        laws = []
+        for i in range(number_of_laws):
+            law = Law(mean, stdev, law_type)
+            laws.append(law)
+        if number_of_laws == 0:
+            self.law_history.append([])
+            return 0
+        else:
+            self.law_history.append(laws)
+            return laws
+        
     def _update_party_comp(self, society):
         # No dynamic aspect to affiliation yet in society, but once there is,
         # just _calculate_society_comp
