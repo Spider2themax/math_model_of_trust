@@ -34,7 +34,7 @@ class Law:
         self.law_type = law_type
         self.actual_value = self._calculate_law_magnitude(mean,stdev,law_type)
     
-    def _calculate_law_magnitude(mean, stdev, law_type):
+    def _calculate_law_magnitude(self, mean, stdev, law_type):
         # This method is where the actual value gets calculated, and is split
         # according to the desired calculation method.
         if law_type == 0:
