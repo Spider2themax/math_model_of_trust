@@ -29,7 +29,7 @@ class Institution:
             A list of the party_composition at every simulation step.
         """
         # Initialize fields
-        self.party_compostion = self._calculate_society_comp(society)
+        self.party_composition = self._calculate_society_comp(society)
         self.law_history = []
         self.party_composition_history = [self.party_composition]
 
