@@ -52,3 +52,27 @@ def test_edges_dynamic():
                 pass
     # Assert that count1 should be greater than count2
     assert count1 > count2
+    
+def test_number_edges():
+    # This test is to make sure that given an affiliation probability close to 
+    # 1/2, the number of edges formed with the node is neither close to 0
+    # nor the population size by the end of the simulation.
+    
+    # Instantiate the society and institution
+    society = Society(population_size=100, connectivity_probability=0.5)
+    institution = Institution(society = society)
+    
+    # Simulate the society
+    trust_simulator = TrustSimulator()
+    societal_trust = trust_simulator.simulate_society(society = society,
+                                                      institution = institution,
+                                                      iterations = 30,
+                                                      alpha = 0.1,
+                                                      affiliation_prob = 0.5)
+    # Assert for every node that the number of edges is neither 0 nor 100
+    count = 0
+    for person_id_first in range(society.population_size):
+        for person_id_second in range(society.population_size):
+            if society.edge_matrix[person_id_first][person_id_second]==1:
+                count = count + 1
+        assert ((count > 0) and (count < society.population_size)) 
