@@ -75,4 +75,5 @@ def test_number_edges():
         for person_id_second in range(society.population_size):
             if society.edge_matrix[person_id_first][person_id_second]==1:
                 count = count + 1
-        assert ((count > 0) and (count < society.population_size)) 
+        assert ((count > 0) and (count < society.population_size))
+        count = 0
