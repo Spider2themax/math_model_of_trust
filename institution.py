@@ -14,11 +14,24 @@ from person import Person
 class Institution:
     
     def __init__(self, society):
-        self.party_compostion = 0
-        self._calculate_society_comp(society)
-        self.affiliation_history = [self.party_composition]
+        """
+        The instiution class primarily generates laws and also has an affiliation
+        which will effect partisan trust.
+
+        Fields
+        -------
+        party_composition:
+            The current average party_affilitation of the institution
+        law_history:
+            A list of lists. Each entry in the law_history is a list of Law objects.
+        party_composition_history:
+            A list of the party_composition at every simulation step.
+        """
+        # Initialize fields
+        self.party_compostion = self._calculate_society_comp(society)
         self.law_history = []
-        
+        self.party_composition_history = [self.party_composition]
+
     def get_affiliation(self):
         return self.party_composition
         
@@ -32,10 +45,10 @@ class Institution:
             count = count + 1
         
         if count == 0:
-            self.party_compostion = 0
+            return 0
         else:
-            self.party_composition = total_affiliation/count
-    
+            return total_affiliation/count
+
     def _generate_law(self, mean = 0, stdev = 0.5):
         # Generate a law to be transformed using tanh based on a normal distribution.
         # Default params: mean = 0, stdev = 0.5
@@ -43,20 +56,18 @@ class Institution:
         law = np.random.normal(loc = mean, scale = stdev)
         self.law_history.append(law)
         return np.tanh(law)
-        
+
     def _update_party_comp(self, society):
         # No dynamic aspect to affiliation yet in society, but once there is,
         # just _calculate_society_comp
         self._calculate_society_comp(society)
-        self.affiliation_history.append(self.party_composition)
-    
+        self.party_composition_history.append(self.party_composition)
+
     def plot_institution_affiliation_history(self):
         # Similar to society class, plot the affiliation history for the 
         # institution.
-        plt.plot(self.affiliation_history, color = 'r')
-        
+        plt.plot(self.party_composition_history, color = 'r')
+
     def plot_institution_law_history(self):
         # Plot the institution's history of law making
         plt.plot(self.law_history, color = 'r')
-
-
