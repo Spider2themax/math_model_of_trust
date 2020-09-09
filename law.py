@@ -9,7 +9,7 @@ import random
 
 class Law:
     
-    def __init__(self, mean = 0, stdev = 0.5, law_type = 0):
+    def __init__(self, affected_persons, mean = 0, stdev = 0.5, law_type = 0):
         """ 
         The fields for the class should be the mean and standard deviation
         of the law value, regardless of distribution.
@@ -29,10 +29,14 @@ class Law:
         actual_value:
             The actual value which is generated based off of the law type and
             mean, and is the true law's magnitude.
+        affected_persons:
+            A vector containing the existence and benefit/detrirment (+/-)
+            of the law to each member of the society the law was generated for.
         """
         self.mean = mean
         self.law_type = law_type
         self.actual_value = self._calculate_law_magnitude(mean,stdev,law_type)
+        self.affected_persons = affected_persons
     
     def _calculate_law_magnitude(self, mean, stdev, law_type):
         # This method is where the actual value gets calculated, and is split
