@@ -9,7 +9,7 @@ import random
 
 class Law:
     
-    def __init__(self, affected_persons, mean = 0, stdev = 0.5, law_type = 0):
+    def __init__(self, affected_persons, mean = 0.0, stdev = 0.5, law_type = 0):
         """ 
         The fields for the class should be the mean and standard deviation
         of the law value, regardless of distribution.
@@ -47,5 +47,5 @@ class Law:
         else:
             # Note: here is where further methods would be placed, forming 
             # a nested-if structure.
-            return 0
+            return 0.0
             
