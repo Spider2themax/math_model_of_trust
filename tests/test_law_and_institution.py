@@ -13,7 +13,7 @@ def test_lawInstitution_fields():
     institution = Institution(society)
     laws = institution._generate_laws(society)
     
-    assert type(institution.get_affiliation) is float
+    assert type(institution.get_affiliation()) is float
     
     for law in laws:
         for person_id in range(society.population_size):
