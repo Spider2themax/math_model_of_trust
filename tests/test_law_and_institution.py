@@ -13,14 +13,14 @@ def test_lawInstitution_fields():
     institution = Institution(society)
     laws = institution._generate_laws(society)
     
-    assert type(institution.get_affiliation()) is float
+    assert isinstance(institution.get_affiliation(), float)
     
     for law in laws:
         for person_id in range(society.population_size):
-            assert type(law.affected_persons[person_id]) is int
-        assert type(law.mean) is float
-        assert type(law.law_type) is int
-        assert type(law.actual_value) is float
+            assert isinstance(law.affected_persons[person_id], int)
+        assert isinstance(law.mean, float)
+        assert isinstance(law.law_type, int)
+        assert isinstance(law.actual_value, float)
     
         
 
