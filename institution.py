@@ -41,7 +41,7 @@ class Institution:
         # affiliation, setting party_compostion to this.
         return np.mean([society.person_vector[person_id]._party_affiliation for person_id in range(society.population_size)])
 
-    def _generate_laws(self, society, mean = 0, stdev = 0.5, law_type = 0, number_of_laws = 1):
+    def _generate_laws(self, society, mean = 0.0, stdev = 0.5, law_type = 0, number_of_laws = 1):
         # Generate a law(s) to be transformed using tanh, returned as an array.
         # Default params: mean = 0, stdev = 0.5, number_of_laws = 1
         laws = []
