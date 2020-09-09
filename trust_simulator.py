@@ -25,7 +25,7 @@ class TrustSimulator:
         for iteration in range(iterations):
             # Determine an update in trust based on 
             trust_updates = []
-            laws = institution._generate_laws(mean = mean, stdev = stdev)
+            laws = institution._generate_laws(society=society, mean = mean, stdev = stdev)
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   institution=institution,
@@ -63,10 +63,8 @@ class TrustSimulator:
         # Have the laws positively update those who share the affiliation of the 
         # institution, and negatively affect the opposite.
         for law in laws:
-            if society.person_vector[person_id].get_affiliation() * institution.get_affiliation() >= 0:
-                update = update + J * abs(np.tanh(law.actual_value))
-            else:
-                update = update - J * abs(np.tanh(law.actual_value))
+            update = update + J * law.affected_persons[person_id] * np.tanh(alpha * law.actual_value)
+                
         return update - society.person_vector[person_id].get_trust()
 
     def _update_societal_trust(self, society, trust_updates):
