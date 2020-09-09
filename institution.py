@@ -39,27 +39,19 @@ class Institution:
     def _calculate_society_comp(self, society):
         # Loop through the inputed society and calculate the average party
         # affiliation, setting party_compostion to this.
-        total_affiliation = 0
-        count = 0
-        for person_id in range(society.population_size):
-            total_affiliation = total_affiliation + society.person_vector[person_id]._party_affiliation
-            count = count + 1
-        
-        if count == 0:
-            return 0
-        else:
-            return total_affiliation/count
+        return np.mean([society.person_vector[person_id]._party_affiliation for person_id in range(society.population_size)])
 
-    def _generate_laws(self, mean = 0, stdev = 0.5, law_type = 0, number_of_laws = 1):
+    def _generate_laws(self, society, mean = 0, stdev = 0.5, law_type = 0, number_of_laws = 1):
         # Generate a law(s) to be transformed using tanh, returned as an array.
         # Default params: mean = 0, stdev = 0.5, number_of_laws = 1
         laws = []
         for i in range(number_of_laws):
-            law = Law(mean, stdev, law_type)
+            affected_persons = self._determine_target_pop(society)
+            law = Law(affected_persons, mean, stdev, law_type)
             laws.append(law)
         if number_of_laws == 0:
             self.law_history.append([])
-            return 0
+            return laws
         else:
             self.law_history.append(laws)
             return laws
@@ -69,6 +61,18 @@ class Institution:
         # just _calculate_society_comp
         self._calculate_society_comp(society)
         self.party_composition_history.append(self.party_composition)
+        
+    def _determine_target_pop(self, society):
+        # Default to positively affecting those with same sign of affiliation,
+        # and negatively affecting those of the opposite affiliation. Values
+        # in the returned vector should be -1, 0 or 1. (Detriment, Nothing, Benefit)
+        effects = [0 for i in range(society.population_size)]
+        for person_id in effects:
+            if self.party_composition * society.person_vector[person_id].get_affiliation() > 0:
+                effects[person_id] = 1
+            else:
+                effects[person_id] = -1
+        return effects
 
     def plot_institution_affiliation_history(self):
         # Similar to society class, plot the affiliation history for the 
