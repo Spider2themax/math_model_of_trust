@@ -9,7 +9,7 @@ import random
 
 class Law:
     
-    def __init__(self, affected_persons, mean = 0.0, stdev = 0.5, law_type = 0):
+    def __init__(self, affected_persons, mean = 0.0, stdev = 0.5, law_type = 'G'):
         """ 
         The fields for the class should be the mean and standard deviation
         of the law value, regardless of distribution.
@@ -23,7 +23,7 @@ class Law:
             
             Types and assignments
             ----------------------
-            0 = Standard Gaussian centered around 0 with standard deviation 
+            G = Standard Gaussian centered around 0 with standard deviation 
             equal to that of what is taken by the __init__ method.
         
         actual_value:
@@ -41,7 +41,7 @@ class Law:
     def _calculate_law_magnitude(self, mean, stdev, law_type):
         # This method is where the actual value gets calculated, and is split
         # according to the desired calculation method.
-        if law_type == 0:
+        if law_type == 'G':
             # Generate a value from a gaussian with loc=mean and scale=stdev.
             return np.random.normal(loc = mean, scale = stdev)
         else:
