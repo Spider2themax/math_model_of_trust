@@ -13,7 +13,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5):
+    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5, law_type = 'G'):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -25,7 +25,7 @@ class TrustSimulator:
         for iteration in range(iterations):
             # Determine an update in trust based on 
             trust_updates = []
-            laws = institution._generate_laws(society=society, mean = mean, stdev = stdev)
+            laws = institution._generate_laws(society=society, mean = mean, stdev = stdev, law_type = law_type)
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   institution=institution,
