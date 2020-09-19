@@ -19,7 +19,7 @@ def test_lawInstitution_fields():
         for person_id in range(society.population_size):
             assert isinstance(law.affected_persons[person_id], int)
         assert isinstance(law.mean, float)
-        assert isinstance(law.law_type, int)
+        assert isinstance(law.law_type, str)
         assert isinstance(law.actual_value, float)
     
         
