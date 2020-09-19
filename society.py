@@ -13,7 +13,6 @@ class Society:
     connectivity_probability:double
     edge_matrix:(population_sizexpopulation_size)double
     person_vector:(population_size)double
-
     Interpretation of the edge_matrix:
     Entry in row i, column j, represents the presence of an edge from node
     i+1 to node j+1 (since indices start at 0).
@@ -54,3 +53,17 @@ class Society:
             plt.style.use('fivethirtyeight')
             plt.plot(pos_signal, color='r')
             plt.plot(neg_signal, color='b')
+    
+    def plot_society_affiliation_histories(self):
+        for person in self.person_vector:
+            signal = np.array(person._affiliation_history)
+            pos_signal = signal.copy()
+            neg_signal = signal.copy()
+            
+            pos_signal[pos_signal <= 0] = np.nan
+            neg_signal[neg_signal > 0] = np.nan
+            
+            #plotting
+            plt.style.use('fivethirtyeight')
+            plt.plot(pos_signal, color = 'r')
+            plt.plot(neg_signal, color = 'b')
