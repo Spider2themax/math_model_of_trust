@@ -2,3 +2,4 @@
 .DS_Store
 __pycache__/person.cpython-37.pyc
 *.pyc
+.ipynb_checkpoints/Verifying Dynamic Affiliation Matrix Behavior-checkpoint.ipynb
