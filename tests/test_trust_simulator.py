@@ -2,23 +2,13 @@
 
 from trust_simulator import TrustSimulator
 from society import Society
-<<<<<<< HEAD
-=======
 from institution import Institution
->>>>>>> add_institution_class
 import pytest
 
 
 @pytest.mark.parametrize("alpha", [(1), (0.05)])
 def test_societal_convergence(alpha):
     society = Society(population_size=100, connectivity_probability=0.1)
-<<<<<<< HEAD
-    trust_simulator = TrustSimulator()
-    societal_trust = trust_simulator.simulate_society(society=society,
-                                                      iterations=10,
-                                                      alpha=alpha)
-    assert sum(societal_trust) < 100
-=======
     institution = Institution(society = society)
     trust_simulator = TrustSimulator()
     societal_trust = trust_simulator.simulate_society(society=society,
@@ -87,4 +77,3 @@ def test_number_edges():
                 count = count + 1
         assert ((count > 0) and (count < society.population_size))
         count = 0
->>>>>>> add_institution_class
