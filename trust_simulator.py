@@ -13,7 +13,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5, law_type = 'G'):
+    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5, law_type = 'G', number_of_laws = 1, beta = 0):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -25,7 +25,9 @@ class TrustSimulator:
         for iteration in range(iterations):
             # Determine an update in trust based on 
             trust_updates = []
-            laws = institution._generate_laws(society=society, mean = mean, stdev = stdev, law_type = law_type)
+            # Note: In order to replicate Twitter paper, forcing laws to be 
+            # zero each iteration.
+            laws = institution._generate_laws(society=society, mean = mean, stdev = stdev, law_type = law_type, number_of_laws = 0)
             for person_id in range(society.population_size):
                 trust_updates.append(self._calculate_trust_update(society=society,
                                                                   institution=institution,
@@ -44,7 +46,7 @@ class TrustSimulator:
             # Reset trust_updates each iteration
             trust_updates = []
             # Update edge matrix
-            society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob)
+            society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob, beta = beta)
             # Update society's party affiliations
             society = self._update_society_party(society = society, J=J, alpha=alpha)
             # Update institution composition
@@ -72,7 +74,7 @@ class TrustSimulator:
             society.person_vector[person_id].update_trust(update=trust_updates[person_id])
         return society
     
-    def _update_edge_matrix(self, society, affiliation_prob = 0.2):
+    def _update_edge_matrix(self, society, affiliation_prob = 0.2, beta = 0):
         # Loop through each entry in the edge matrix. On diagonal elements 
         # always remain 1 since all nodes are connected with themselves. For
         # all other connections, if the nodes are further in affiliation, have
@@ -82,15 +84,27 @@ class TrustSimulator:
                 if person_id_first == person_id_second:
                     society.edge_matrix[person_id_first][person_id_second] = 1
                 else:
-                     # Compute party affiliation difference
-                    party_delta = np.tanh(society.person_vector[person_id_first]._party_affiliation) - np.tanh(society.person_vector[person_id_second]._party_affiliation)
-                    party_delta = abs(party_delta)
+                    # This is not the way the transition probabilities were 
+                    # done in the paper, but another way. Uncommented section
+                    # is the one for the paper.
+                    
+                    # Compute party affiliation difference
+                    #party_delta = np.tanh(society.person_vector[person_id_first]._party_affiliation) - np.tanh(society.person_vector[person_id_second]._party_affiliation)
+                    #party_delta = abs(party_delta)
                     
                     # Further apart affiliation, less likely to connect.
                     # party_delta maximum of 2, so divided by 2 and taking
                     # the complement gives a reasonable discount.
-                    adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
+                    #adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
                     
+                    # Compute total sum of denominator in paper
+                    sum_for_prob = 0
+                    for person_id_third in range(society.population_size):
+                        if person_id_third != person_id_first:
+                            sum_for_prob += abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_third].get_trust()) ** (-beta)
+                    
+                    numerator_for_prob = abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_second].get_trust()) ** (-beta)
+                    adjusted_connectivity_probability = numerator_for_prob/sum_for_prob
                     connect = random.random()
                     
                     if connect <= adjusted_connectivity_probability:
