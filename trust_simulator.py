@@ -101,7 +101,7 @@ class TrustSimulator:
                     sum_for_prob = 0
                     for person_id_third in range(society.population_size):
                         if person_id_third != person_id_first:
-                            sum_for_prob += abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_third].get_trust()) ** (-beta)
+                            sum_for_prob = sum_for_prob + abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_third].get_trust()) ** (-beta)
                     
                     numerator_for_prob = abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_second].get_trust()) ** (-beta)
                     adjusted_connectivity_probability = numerator_for_prob/sum_for_prob
