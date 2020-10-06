@@ -74,7 +74,7 @@ class TrustSimulator:
             society.person_vector[person_id].update_trust(update=trust_updates[person_id])
         return society
     
-    def _update_edge_matrix(self, society, affiliation_prob = 0.2, beta = 0):
+    def _update_edge_matrix(self, society, affiliation_prob = 0.2, beta = 0.0):
         # Loop through each entry in the edge matrix. On diagonal elements 
         # always remain 1 since all nodes are connected with themselves. For
         # all other connections, if the nodes are further in affiliation, have
@@ -98,7 +98,7 @@ class TrustSimulator:
                     #adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
                     
                     # Compute total sum of denominator in paper
-                    sum_for_prob = 0
+                    sum_for_prob = 0.0
                     for person_id_third in range(society.population_size):
                         if person_id_third != person_id_first:
                             sum_for_prob = sum_for_prob + abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_third].get_trust()) ** (-beta)
