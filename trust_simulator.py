@@ -13,7 +13,7 @@ class TrustSimulator:
     def __init__(self):
         pass
 
-    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5, law_type = 'G', number_of_laws = 1, beta = 0):
+    def simulate_society(self, society, institution, iterations, K=1, J=1, alpha=1, affiliation_prob = 0.5, mean = 0, stdev = 0.5, law_type = 'G', number_of_laws = 1, beta = 0, reciprocity = 0.5):
         """
         This is the main function for simulating the institutional trust of an
         entire society. The simulation will be ran by updating each invididual
@@ -46,7 +46,7 @@ class TrustSimulator:
             # Reset trust_updates each iteration
             trust_updates = []
             # Update edge matrix
-            society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob, beta = beta)
+            society = self._update_edge_matrix(society = society, affiliation_prob = affiliation_prob, beta = beta, reciprocity = reciprocity)
             # Update society's party affiliations
             society = self._update_society_party(society = society, J=J, alpha=alpha)
             # Update institution composition
@@ -74,43 +74,38 @@ class TrustSimulator:
             society.person_vector[person_id].update_trust(update=trust_updates[person_id])
         return society
     
-    def _update_edge_matrix(self, society, affiliation_prob = 0.2, beta = 0.0):
+    def _update_edge_matrix(self, society, affiliation_prob = 0.2, beta = 0.0, reciprocity = 0.5):
         # Loop through each entry in the edge matrix. On diagonal elements 
         # always remain 1 since all nodes are connected with themselves. For
         # all other connections, if the nodes are further in affiliation, have
         # the edge update be more likely to not connect. 
+        
+        # Set the parameters that the paper uses
+        """
+        gamma = 2.1
+        m = 10
+        society.edge_matrix = np.zeros((society.population_size, society.population_size)).tolist()
+        actions = np.random.power(gamma, size = society.population_size)
         for person_id_first in range(society.population_size):
-            for person_id_second in range(society.population_size):
-                if person_id_first == person_id_second:
-                    society.edge_matrix[person_id_first][person_id_second] = 1
-                else:
-                    # This is not the way the transition probabilities were 
-                    # done in the paper, but another way. Uncommented section
-                    # is the one for the paper.
-                    
-                    # Compute party affiliation difference
-                    #party_delta = np.tanh(society.person_vector[person_id_first]._party_affiliation) - np.tanh(society.person_vector[person_id_second]._party_affiliation)
-                    #party_delta = abs(party_delta)
-                    
-                    # Further apart affiliation, less likely to connect.
-                    # party_delta maximum of 2, so divided by 2 and taking
-                    # the complement gives a reasonable discount.
-                    #adjusted_connectivity_probability = (1 - (party_delta)/2) * affiliation_prob
-                    
-                    # Compute total sum of denominator in paper
-                    sum_for_prob = 0.0
-                    for person_id_third in range(society.population_size):
-                        if person_id_third != person_id_first:
-                            sum_for_prob = sum_for_prob + abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_third].get_trust()) ** (-beta)
-                    
-                    numerator_for_prob = abs(society.person_vector[person_id_first].get_trust() - society.person_vector[person_id_second].get_trust()) ** (-beta)
-                    adjusted_connectivity_probability = numerator_for_prob/sum_for_prob
-                    connect = random.random()
-                    
-                    if connect <= adjusted_connectivity_probability:
-                        society.edge_matrix[person_id_first][person_id_second] = 1
-                    else:
-                        society.edge_matrix[person_id_first][person_id_second] = 0
+            take_action = random.random()
+            if take_action <= actions[person_id_first]:
+                # Step 2 in supplemental materials shows that they must
+                # influence m people if action is taken, according to the 
+                # p.m.f given by eq. 2.
+                
+                # Determine the pmf array for each node j w.r.t i
+                      
+                denominator_for_prob = sum([abs(society.person_vector[person_id_first].get_trust()-society.person_vector[j].get_trust())**(-beta) for j in range(society.population_size) if person_id_first != j])
+                numerator_for_prob = [abs(society.person_vector[person_id_first].get_trust() - society.person_vector[j].get_trust()) ** (-beta) for j in range(society.population_size) if person_id_first !=j]
+                connectivity_probability_array = numerator_for_prob/denominator_for_prob
+                ids = [i for i in range(society.population_size) if person_id_first != i]
+                influence_nodes = np.random.choice(a=ids,size = m,replace = False, p = connectivity_probability_array)
+                for node in influence_nodes:
+                    society.edge_matrix[node][person_id_first] = 1
+                    influence_back = random.random()
+                    if influence_back <= reciprocity:
+                        society.edge_matrix[person_id_first][node] = 1
+        """
         return society
     
     def _update_society_party(self, society, J = 1, alpha = 1):
