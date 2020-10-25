@@ -17,6 +17,7 @@ class Society:
     Entry in row i, column j, represents the presence of an edge from node
     i+1 to node j+1 (since indices start at 0).
     """
+
     def __init__(self, population_size=25, connectivity_probability=0.1):
 
         self.population_size = population_size
@@ -45,25 +46,25 @@ class Society:
             signal = np.array(person._trust_history)
             pos_signal = signal.copy()
             neg_signal = signal.copy()
-            
+
             pos_signal[pos_signal <= 0] = np.nan
             neg_signal[neg_signal > 0] = np.nan
-            
-            #plotting
-            plt.style.use('fivethirtyeight')
-            plt.plot(pos_signal, color='r')
-            plt.plot(neg_signal, color='b')
-    
+
+            # plotting
+            plt.style.use("fivethirtyeight")
+            plt.plot(pos_signal, color="r")
+            plt.plot(neg_signal, color="b")
+
     def plot_society_affiliation_histories(self):
         for person in self.person_vector:
             signal = np.array(person._affiliation_history)
             pos_signal = signal.copy()
             neg_signal = signal.copy()
-            
+
             pos_signal[pos_signal <= 0] = np.nan
             neg_signal[neg_signal > 0] = np.nan
-            
-            #plotting
-            plt.style.use('fivethirtyeight')
-            plt.plot(pos_signal, color = 'r')
-            plt.plot(neg_signal, color = 'b')
+
+            # plotting
+            plt.style.use("fivethirtyeight")
+            plt.plot(pos_signal, color="r")
+            plt.plot(neg_signal, color="b")
